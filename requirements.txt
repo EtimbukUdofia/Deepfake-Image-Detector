@@ -1,4 +1,4 @@
 Flask
-tensorflow-cpu==2.14.0
+tensorflow
 opencv-python-headless
 numpy<2.0.0
