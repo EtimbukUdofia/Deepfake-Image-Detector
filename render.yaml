@@ -1,8 +1,10 @@
 services:
   - type: web
     name: deepfake-detector
-    env: docker
+    runtime: docker
+    repo: https://github.com/EtimbukUdofia/Deepfake-Image-Detector
+    branch: main
     plan: free
-    # region: oregon  # or frankfurt/london/singapore
-    dockerfilePath: Dockerfile
-    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 5000

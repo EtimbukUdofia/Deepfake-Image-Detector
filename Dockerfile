@@ -1,21 +1,30 @@
+# Use lightweight Python image
 FROM python:3.10-slim
 
-# Install OS-level dependencies for OpenCV
+# Set environment
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-  libgl1 \
+  build-essential \
   libglib2.0-0 \
+  libsm6 \
+  libxrender1 \
+  libxext6 \
   && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
+# Create app directory
 WORKDIR /app
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest of the app
+# Copy app code
 COPY . .
 
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose port
 EXPOSE 5000
 
+# Run the app
 CMD ["python", "app.py"]
