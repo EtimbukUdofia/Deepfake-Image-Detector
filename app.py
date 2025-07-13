@@ -3,11 +3,24 @@ from tensorflow.keras.models import load_model
 import numpy as np
 import cv2
 import os
-
+import urllib.request
 from io import BytesIO
 
 app = Flask(__name__)
-model = load_model("model/cnn_model.keras")
+
+# Define model path and remote URL
+MODEL_PATH = "model/cnn_model.keras"
+REMOTE_MODEL_URL = "https://huggingface.co/VictoryUdofia/deepfake-model/resolve/main/cnn_model.keras"
+
+# Download the model from Hugging Face if it doesn't exist locally
+if not os.path.exists(MODEL_PATH):
+    os.makedirs("model", exist_ok=True)
+    print("Downloading model from Hugging Face Gubb...")
+    urllib.request.urlretrieve(REMOTE_MODEL_URL, MODEL_PATH)
+    print("Download complete.")
+
+# Load the model after ensuring it's downloaded
+model = load_model(MODEL_PATH)
 target_size = (224, 224)
 
 
@@ -22,7 +35,7 @@ def preprocess_image_from_bytes(file_bytes):
     img = cv2.resize(img, target_size)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img = img / 255.0
-    img = np.expand_dims(img, axis=0)  # (1, 224, 224, 3)
+    img = np.expand_dims(img, axis=0)  # Shape: (1, 224, 224, 3)
     return img
 
 
